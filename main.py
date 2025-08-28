@@ -4085,6 +4085,8 @@ async def _activation_service(context: Dict[str, Any], activation_graph: Any, ap
     print(f"[ACTIVATION_SERVICE] 📥 Processando {context['flow']}")
     print(f"[ACTIVATION_SERVICE] 📱 Phone: {context['phone_number']}")
     
+    nome_do_contexto = context["informacoes_contexto"].get("nome", "").strip()
+
     try:
         phone_number = context["phone_number"]
         
@@ -4129,7 +4131,7 @@ async def _activation_service(context: Dict[str, Any], activation_graph: Any, ap
         initial_state = {
             "messages": [],
             "phone_number": context["phone_number"],
-            "name": "Sistema",
+            "name": nome_do_contexto if nome_do_contexto else "Sistema",
             "flow_name": context["flow"],
             "activation_context": [context["informacoes_contexto"]]
         }
