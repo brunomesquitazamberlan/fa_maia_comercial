@@ -1789,8 +1789,8 @@ def create_support_graph_template(http_client: aiohttp.ClientSession, app_state:
         # TODO: Implementar lógica específica
         state['HIL'] = True
         
-        resposta = "Vou direcionar sua mensagem para nossa equipe. Aguarde um momento."
-        state['messages'].append(AIMessage(content=resposta))
+        #resposta = "Vou direcionar sua mensagem para nossa equipe. Aguarde um momento."
+        #state['messages'].append(AIMessage(content=resposta))
         
         return state
 
@@ -2049,9 +2049,9 @@ Conte sempre conosco! 💛"""
         phone_number = state.get("phone_number")
         
         context = state.get("activation_context", [{}])
-        nome = context[0].get("nome", "").strip() if context else ""
+        nome_contexto = context[0].get("nome", "").strip() if context else ""
         
-        mensagem = """Buenas {nome}, como vai? 
+        mensagem = f"""Buenas {nome_contexto}, como vai? 
 Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
 
 Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
