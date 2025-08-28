@@ -55,7 +55,7 @@ curl -X POST http://212.85.1.27:8025/activation/trigger \
 curl -X POST "http://212.85.1.27:8025/chat/send" \
   -H "Content-Type: application/json" \
   -d '{
-    "phone_number": "55319",
+    "phone_number": "553199565590",
     "message": "Olá! Esta é uma mensagem de teste enviada via API.",
     "type": "text"
   }'

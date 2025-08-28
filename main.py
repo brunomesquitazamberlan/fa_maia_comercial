@@ -1965,7 +1965,7 @@ def create_activation_graph(http_client: aiohttp.ClientSession, app_state: Any):
         
         return state
     
-    def supervisor_decision(state: Activation_State) -> Literal["aniversarios", "placeholder"]:
+    def supervisor_decision(state: Activation_State) -> Literal["aniversarios", "placeholder", "ativacao_masterclass"]:
         
         # Rotear baseado na intenção
         flow_name = state.get('flow_name')
@@ -1974,6 +1974,7 @@ def create_activation_graph(http_client: aiohttp.ClientSession, app_state: Any):
         intention_routing = {
             "aniversarios": "aniversarios",
             "indefinido": "placeholder", 
+            "ativacao_masterclass": "ativacao_masterclass",
         }
         
         return intention_routing.get(flow_name, "placeholder")
@@ -2043,6 +2044,28 @@ Conte sempre conosco! 💛"""
         
         return state
 
+    async def ativacao_masterclass_flow_node(state: Activation_State):
+
+        phone_number = state.get("phone_number")
+        
+        context = state.get("activation_context", [{}])
+        nome = context[0].get("nome", "").strip() if context else ""
+        
+        mensagem = """Buenas {nome}, como vai? 
+Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
+
+Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
+
+Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
+
+Me conta, qual é a sua área de atuação hoje?"""
+        
+        # ===== RESTO DO CÓDIGO IGUAL =====
+        result = await send_ai_message(phone_number, mensagem, http_client)
+        
+        return state
+
+
     def placeholder_node(state: Activation_State):
         return state
         
@@ -2063,13 +2086,16 @@ Conte sempre conosco! 💛"""
         builder_activation.add_node("aniversario_flow_node", aniversario_flow_node)
         builder_activation.add_node("placeholder_node", placeholder_node)
         builder_activation.add_node("clean_up_node", clean_up_node)
+        builder_activation.add_node("ativacao_masterclass_node", ativacao_masterclass_flow_node)
         
         builder_activation.add_edge(START, "supervisor_node")
         builder_activation.add_conditional_edges("supervisor_node", supervisor_decision,
         {'aniversarios': 'aniversario_flow_node',
-        'placeholder': 'placeholder_node'})
+        'placeholder': 'placeholder_node',
+        'ativacao_masterclass': 'ativacao_masterclass_node'})
         
         builder_activation.add_edge("aniversario_flow_node", "clean_up_node")
+        builder_activation.add_edge("ativacao_masterclass_node", "clean_up_node")
         builder_activation.add_edge("placeholder_node", "clean_up_node")
 
         builder_activation.add_edge("clean_up_node", END)
@@ -4104,7 +4130,7 @@ async def trigger_activation(payload: ActivationTriggerPayload, request: Request
         
         # Validar se flow é reconhecido (lista básica para começar)
         flows_validos = [
-            "aniversarios",
+            "ativacao_masterclass",
         ]
         
         if payload.flow not in flows_validos:
