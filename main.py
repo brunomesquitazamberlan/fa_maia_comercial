@@ -2058,77 +2058,77 @@ Conte sempre conosco! 💛"""
         # Mensagens com nome personalizado (baseadas na mensagem atual da Fabrícia)
         mensagens_com_nome = [
             f"""Buenas {nome_contexto}, tudo bem? ❤️
-    Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
+Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
 
-    Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
+Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
 
-    Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
+Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
 
             f"""Buenas {nome_contexto}, como vai? ❤️
-    Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
+Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
 
-    Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
+Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
 
-    Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
+Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
 
             f"""Buenas {nome_contexto}, beleza? ❤️
-    Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
+Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
 
-    Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
+Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
 
-    Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
+Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
 
             f"""Buenas {nome_contexto}, tudo joia? ❤️
-    Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
+Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
 
-    Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
+Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
 
-    Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
+Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
 
             f"""Buenas {nome_contexto}, como você está? ❤️
-    Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
+Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
 
-    Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
+Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
 
-    Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
+Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
         ]
         
         # Mensagens sem nome (genéricas baseadas na mensagem atual da Fabrícia)
         mensagens_sem_nome = [
             """Buenas, tudo bem? ❤️
-    Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
+Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
 
-    Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
+Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
 
-    Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
+Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
 
             """Buenas, como vai? ❤️
-    Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
+Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
 
-    Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
+Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
 
-    Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
+Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
 
             """Buenas, beleza? ❤️
-    Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
+Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
 
-    Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
+Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
 
-    Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
+Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
 
             """Buenas, tudo joia? ❤️
-    Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
+Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
 
-    Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
+Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
 
-    Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
+Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
 
             """Buenas, como você está? ❤️
-    Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
+Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
 
-    Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
+Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
 
-    Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
+Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
         ]
         
         # Escolher mensagem baseada na presença do nome
