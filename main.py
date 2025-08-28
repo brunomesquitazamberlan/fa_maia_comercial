@@ -2055,108 +2055,87 @@ Conte sempre conosco! 💛"""
         print(f"[MASTERCLASS] Nome extraído: '{nome_contexto}'")
         print(f"[MASTERCLASS] Context completo: {context}")
         
-        # Mensagens com nome personalizado (usando f-string)
+        # Mensagens com nome personalizado (baseadas na mensagem atual da Fabrícia)
         mensagens_com_nome = [
-            f"""Buenas {nome_contexto}, tudo bem? 
-Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
+            f"""Buenas {nome_contexto}, tudo bem? ❤️
+    Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
 
-Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
+    Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
 
-Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
+    Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
 
-Hoje você trabalha com o que?""",
+            f"""Buenas {nome_contexto}, como vai? ❤️
+    Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
 
-            f"""Buenas {nome_contexto}, como vai? 
-Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
+    Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
 
-Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
+    Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
 
-Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
+            f"""Buenas {nome_contexto}, beleza? ❤️
+    Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
 
-Me conta, qual é a sua área de atuação hoje?""",
+    Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
 
-            f"""Buenas {nome_contexto}, beleza? 
-Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
+    Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
 
-Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
+            f"""Buenas {nome_contexto}, tudo joia? ❤️
+    Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
 
-Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
+    Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
 
-O que você faz profissionalmente no momento?""",
+    Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
 
-            f"""Buenas {nome_contexto}, tudo joia? 
-Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
+            f"""Buenas {nome_contexto}, como você está? ❤️
+    Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
 
-Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
+    Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
 
-Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
-
-Atualmente você trabalha em que área?""",
-
-            f"""Buenas {nome_contexto}, como você está? 
-Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
-
-Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
-
-Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
-
-Hoje você trabalha com o que exatamente?"""
+    Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
         ]
         
-        # Mensagens sem nome (genéricas)
+        # Mensagens sem nome (genéricas baseadas na mensagem atual da Fabrícia)
         mensagens_sem_nome = [
-            """Buenas, tudo bem? 
-Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
+            """Buenas, tudo bem? ❤️
+    Aqui é a Fabrícia, mentora do grupo Masterclass em Vendas! Fico muito feliz com sua participação!
 
-Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
+    Separei um tempo aqui na agenda pra me conectar com algumas pessoas do grupo e você é uma delas. 🥳
 
-Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
+    Me conta: hoje você trabalha com o quê? E quais têm sido seus maiores desafios?""",
 
-Hoje você trabalha com o que?""",
+            """Buenas, como vai? ❤️
+    Sou a Fabrícia, mentora aqui do Masterclass em Vendas! Que bom ter você conosco!
 
-            """Buenas, como vai? 
-Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
+    Tirei um tempinho da minha agenda para conversar com alguns membros do grupo, e você estava na minha lista! 🥳
 
-Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
+    Conta pra mim: atualmente você trabalha com o quê? E quais são os principais desafios que você tem enfrentado?""",
 
-Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
+            """Buenas, beleza? ❤️
+    Fabrícia falando! Mentora do grupo Masterclass em Vendas. Adorei sua participação!
 
-Me conta, qual é a sua área de atuação hoje?""",
+    Reservei um tempo especial hoje para me conectar com algumas pessoas especiais do grupo, e você é uma delas! 🥳
 
-            """Buenas, beleza? 
-Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
+    Me fala: hoje você atua em que área? E quais têm sido seus maiores obstáculos?""",
 
-Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
+            """Buenas, tudo joia? ❤️
+    Aqui é a Fabrícia, sua mentora do Masterclass em Vendas! Estou muito feliz de ter você no grupo!
 
-Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
+    Separei um espaço na minha agenda hoje para conhecer melhor alguns membros, e você estava selecionado! 🥳
 
-O que você faz profissionalmente no momento?""",
+    Quero saber: você trabalha com o que hoje em dia? E quais são os desafios que mais te incomodam?""",
 
-            """Buenas, tudo joia? 
-Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
+            """Buenas, como você está? ❤️
+    Sou a Fabrícia, mentora do grupo Masterclass em Vendas! Que alegria ter você participando!
 
-Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
+    Bloqueei um tempo aqui hoje especificamente para me conectar com pessoas importantes do grupo, e você é uma delas! 🥳
 
-Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
-
-Atualmente você trabalha em que área?""",
-
-            """Buenas, como você está? 
-Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
-
-Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
-
-Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
-
-Hoje você trabalha com o que exatamente?"""
+    Conta aqui: atualmente você trabalha em que segmento? E quais são as principais dificuldades que você enfrenta?"""
         ]
         
         # Escolher mensagem baseada na presença do nome
         if nome_contexto:
-            # Com nome - escolher uma variação aleatória e inserir o nome
-            mensagem_template = random.choice(mensagens_com_nome)
-            mensagem = mensagem_template.format(nome=nome_contexto)
-            variacao_usada = f"COM NOME (variação {mensagens_com_nome.index(mensagem_template) + 1}/5)"
+            # Com nome - escolher uma variação aleatória (já formatada com f-string)
+            mensagem = random.choice(mensagens_com_nome)
+            variacao_usada = f"COM NOME (variação {mensagens_com_nome.index(mensagem) + 1}/5)"
         else:
             # Sem nome - escolher uma variação aleatória
             mensagem = random.choice(mensagens_sem_nome)
