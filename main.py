@@ -5312,16 +5312,12 @@ async def endpoint_listar_telefones_com_ia(request: TelefonesRequest):
 @context_router.post("/extrair-telefones-conversas-periodo")
 async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest):
     """
-    🎯 ENDPOINT PARA EXTRAIR TELEFONES - Extrai lista de telefones que tiveram conversas no período
+    Extrai lista de telefones que tiveram conversas no período usando Baserow
     """
     
-    # === LOGGER LOCAL ===
     logger = logging.getLogger(__name__)
     
-    
-    
     # === VARIÁVEIS DE AMBIENTE ===
-    
     baserow_token = os.getenv("BASEROW_API_TOKEN")
     baserow_graph_table_id = os.getenv("BASEROW_GRAPH_TABLE_ID")
     
@@ -5410,10 +5406,10 @@ async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest
         # Converte para DataFrame
         if all_records:
             df = pd.DataFrame(all_records)
-            logger.info(f"✅ DataFrame criado com {len(df)} linhas e {len(df.columns)} colunas")
+            logger.info(f"DataFrame criado com {len(df)} linhas e {len(df.columns)} colunas")
             return df
         else:
-            logger.info("❌ Nenhum dado encontrado")
+            logger.info("Nenhum dado encontrado")
             return pd.DataFrame()
     
     def _convert_brazilian_datetime_to_utc_timestamp(
@@ -5566,7 +5562,7 @@ async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest
     # === EXECUÇÃO PRINCIPAL ===
     
     try:
-        logger.info("🚀 Iniciando extração de telefones por período")
+        logger.info("Iniciando extração de telefones por período")
         
         # === BUSCAR DADOS DA TABELA DE GRAFOS ===
         df_grafos = get_table_as_dataframe(table_id, baserow_token)
@@ -5616,7 +5612,7 @@ async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest
         # Remover strings vazias
         telefones_limpos = [tel for tel in telefones_unicos if tel.strip()]
         
-        logger.info(f"✅ {len(telefones_limpos)} telefones únicos encontrados no período")
+        logger.info(f"{len(telefones_limpos)} telefones únicos encontrados no período")
         
         return {
             'sucesso': True,
@@ -5631,7 +5627,7 @@ async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest
     
     except Exception as e:
         error_msg = f"Erro na extração de telefones: {str(e)}"
-        logger.error(f"❌ {error_msg}")
+        logger.error(f"{error_msg}")
         
         return {
             'sucesso': False,
@@ -5644,32 +5640,22 @@ async def endpoint_extrair_telefones_conversas_periodo(request: TelefonesRequest
             'erro': error_msg
         }
 
-
 @context_router.post("/buscar-conversas-numero-com-fallback")
 async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest):
     """
-    🎯 ENDPOINT V2 - Pipeline WhatsApp com Fallback para Baserow
+    Endpoint para buscar conversas usando Evolution API com descoberta automática de formato brasileiro
     
-    Tenta Evolution API primeiro, se falhar ou retornar 0 mensagens,
-    faz fallback para tabela de conversas do Baserow
-    
-    NOVO: Se forcar_evolution_apenas=True, busca APENAS na Evolution (sem fallback)
+    Automaticamente testa formatos 12 e 13 dígitos para números brasileiros
+    e busca TODAS as mensagens usando paginação completa
     """
     
-    # === LOGGER LOCAL ===
-
     logger = logging.getLogger(__name__)
     
-    
-    
     # === VARIÁVEIS DE AMBIENTE ===
-    
     evolution_url = os.getenv("EVOLUTION_URL")
     evolution_api_key = os.getenv("EVOLUTION_API_KEY") 
     evolution_instance_name = os.getenv("WHATSAPP_API_INSTANCE")
     agent_name = os.getenv("AGENT_NAME")
-    baserow_token = os.getenv("BASEROW_API_TOKEN")
-    baserow_message_table_id = os.getenv("BASEROW_MESSAGE_TABLE_ID")
     
     # Verificar variáveis obrigatórias
     if not evolution_url:
@@ -5680,21 +5666,10 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
         raise HTTPException(status_code=500, detail="WHATSAPP_API_INSTANCE não definida no arquivo .env")
     if not agent_name:
         raise HTTPException(status_code=500, detail="AGENT_NAME não definida no arquivo .env")
-    if not baserow_token:
-        raise HTTPException(status_code=500, detail="BASEROW_API_TOKEN não definida no arquivo .env")
-    if not baserow_message_table_id:
-        raise HTTPException(status_code=500, detail="BASEROW_MESSAGE_TABLE_ID não definida no arquivo .env")
     
-    # Converter ID para inteiro
-    try:
-        message_table_id = int(baserow_message_table_id)
-    except ValueError:
-        raise HTTPException(status_code=500, detail="BASEROW_MESSAGE_TABLE_ID deve ser um número inteiro")
-    
-    # === VALIDAÇÕES SIMPLES ===
+    # === VALIDAÇÕES ===
     def validar_request():
         """Validações básicas do request"""
-        # Validar horário comercial
         if len(request.horario_comercial) != 2:
             raise HTTPException(status_code=400, detail='horario_comercial deve ter 2 elementos [inicio, fim]')
         
@@ -5702,33 +5677,161 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
         if not (0 <= inicio <= 23 and 0 <= fim <= 23 and inicio < fim):
             raise HTTPException(status_code=400, detail='Horário comercial inválido')
         
-        # Validar dias úteis
         if not all(0 <= dia <= 6 for dia in request.dias_uteis):
             raise HTTPException(status_code=400, detail='Dias úteis devem estar entre 0 e 6')
         
-        # Validar datas se fornecidas
-        if request.data_hora_inicio is not None and request.data_hora_inicio.strip():
+        if request.data_hora_inicio and request.data_hora_inicio.strip():
             try:
                 datetime.strptime(request.data_hora_inicio, '%Y-%m-%d %H:%M:%S')
             except ValueError:
                 raise HTTPException(status_code=400, detail="data_hora_inicio formato: 'YYYY-MM-DD HH:MM:SS'")
         
-        if request.data_hora_fim is not None and request.data_hora_fim.strip():
+        if request.data_hora_fim and request.data_hora_fim.strip():
             try:
                 datetime.strptime(request.data_hora_fim, '%Y-%m-%d %H:%M:%S')
             except ValueError:
                 raise HTTPException(status_code=400, detail="data_hora_fim formato: 'YYYY-MM-DD HH:MM:SS'")
     
-    # Executar validações
     validar_request()
     
-    # === FUNÇÕES AUXILIARES (EVOLUTION) ===
+    # === FUNÇÃO INTERNA: BUSCA COM FORMATO AUTOMÁTICO ===
+    
+    def find_messages_with_correct_format(base_url: str, api_key: str, instance_name: str, 
+                                         phone_number: str, limit: int = 50, max_pages: int = 100) -> list:
+        """Busca o formato correto do número brasileiro e retorna TODAS as mensagens"""
+        
+        # Primeiro: descobrir o formato correto
+        def find_correct_format(phone_number):
+            import requests
+            from urllib.parse import quote
+            
+            def test_format(remote_jid):
+                encoded_instance = quote(instance_name)
+                url = f"{base_url}/chat/findMessages/{encoded_instance}"
+                
+                headers = {
+                    "apikey": api_key,
+                    "Content-Type": "application/json"
+                }
+                
+                body = {
+                    "where": {
+                        "key": {
+                            "remoteJid": remote_jid
+                        }
+                    }
+                }
+                
+                try:
+                    response = requests.post(url, headers=headers, json=body)
+                    response.raise_for_status()
+                    result = response.json()
+                    if result and result.get('messages', {}).get('records') and len(result['messages']['records']) > 0:
+                        return True
+                    return False
+                except:
+                    return False
+            
+            clean_number = ''.join(filter(str.isdigit, phone_number))
+            
+            # Formatos para testar
+            formats = []
+            if len(clean_number) == 13 and clean_number.startswith('55'):
+                formats = [
+                    f"{clean_number}@s.whatsapp.net",  # 13 dígitos primeiro
+                    f"{clean_number[:4]}{clean_number[5:]}@s.whatsapp.net"  # 12 dígitos
+                ]
+            else:
+                formats = [f"{clean_number}@s.whatsapp.net"]
+            
+            # Testa cada formato
+            for remote_jid in formats:
+                if test_format(remote_jid):
+                    return remote_jid
+            
+            return None
+        
+        # Segundo: buscar todas as mensagens
+        def get_all_messages(remote_jid):
+            headers = {
+                'Content-Type': 'application/json',
+                'apikey': api_key
+            }
+            
+            url = f"{base_url}/chat/findMessages/{instance_name}"
+            all_messages = []
+            page = 1
+            
+            try:
+                while page <= max_pages:
+                    payload = {
+                        "where": {
+                            "key": {
+                                "remoteJid": remote_jid
+                            }
+                        },
+                        "page": page,
+                        "limit": limit
+                    }
+                    
+                    response = requests.post(url, headers=headers, json=payload, timeout=30)
+                    response.raise_for_status()
+                    result = response.json()
+                    
+                    if isinstance(result, dict) and result.get('error'):
+                        if page == 1:
+                            return []
+                        break
+                    
+                    current_page_messages = []
+                    
+                    if isinstance(result, dict) and 'messages' in result:
+                        messages_info = result['messages']
+                        current_page_messages = messages_info.get('records', [])
+                    elif isinstance(result, list):
+                        current_page_messages = result
+                    else:
+                        if page == 1:
+                            return []
+                        break
+                    
+                    if not current_page_messages:
+                        break
+                    
+                    all_messages.extend(current_page_messages)
+                    
+                    # Se a página atual trouxe menos mensagens que o limit, chegou no fim
+                    if len(current_page_messages) < limit:
+                        break
+                    
+                    if isinstance(result, list):
+                        break
+                        
+                    page += 1
+                
+                return all_messages
+            
+            except Exception as e:
+                return all_messages
+        
+        # Executar: formato + mensagens
+        correct_format = find_correct_format(phone_number)
+        if not correct_format:
+            return []
+        
+        return get_all_messages(correct_format)
+    
+    # === FUNÇÕES AUXILIARES ===
     
     def converter_data_para_timestamp(data_str: str) -> int:
-        """Converte string de data para timestamp"""
+        """Converte string de data para timestamp UTC"""
         try:
+            # Interpreta como horário brasileiro e converte para UTC
+            br_tz = pytz.timezone('America/Sao_Paulo')
             dt = datetime.strptime(data_str, '%Y-%m-%d %H:%M:%S')
-            return int(dt.timestamp())
+            dt_br = br_tz.localize(dt)
+            dt_utc = dt_br.astimezone(pytz.UTC)
+            return int(dt_utc.timestamp())
         except ValueError:
             raise ValueError(f"Formato de data inválido: {data_str}")
     
@@ -5791,12 +5894,10 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
         
         numero_original = normalizar_numero(numero)
         
-        # Tentativas de busca
         nome = buscar_contato(numero_original)
         if nome:
             return nome
         
-        # Tentativas com variações brasileiras
         if numero_original.startswith('55'):
             if len(numero_original) == 13:
                 numero_sem_9 = numero_original[:4] + numero_original[5:]
@@ -5819,22 +5920,17 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
         return None
     
     def obter_nome_remetente(numero: str, push_name: str) -> str:
-        """Obtém nome do remetente seguindo hierarquia de prioridade - VERSÃO CORRIGIDA"""
+        """Obtém nome do remetente seguindo hierarquia de prioridade"""
         
-        # 1️⃣ PRIORIDADE 1: Nome salvo na agenda (busca inteligente)
         if request.lista_contatos:
             nome_salvo = buscar_nome_na_agenda(numero)
             if nome_salvo:
                 return f"{nome_salvo} (contato salvo)"
         
-        # 2️⃣ PRIORIDADE 2: pushName da mensagem
         if push_name and push_name != numero:
-            # Se pushName é diferente do número, significa que o contato ESTÁ salvo no WhatsApp
             return f"{push_name} (contato salvo)"
         
-        # 3️⃣ PRIORIDADE 3: Fallback - contato não salvo
         return f"({numero}) (remetente não salvo)"
-
 
     def extrair_conteudo_mensagem(msg: Dict[str, Any], remetente: str) -> str:
         """Extrai conteúdo da mensagem baseado no tipo"""
@@ -5878,9 +5974,11 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
             return f'[Mensagem de tipo {message_type} enviada por {remetente}]'
     
     def calcular_tempo_comercial(timestamp_inicio: int, timestamp_fim: int) -> float:
-        """Calcula tempo em horas considerando horário comercial"""
-        inicio = datetime.fromtimestamp(timestamp_inicio)
-        fim = datetime.fromtimestamp(timestamp_fim)
+        """Calcula tempo em horas considerando horário comercial - timestamps em UTC"""
+        # Converte timestamps UTC para horário brasileiro para cálculo
+        br_tz = pytz.timezone('America/Sao_Paulo')
+        inicio = datetime.fromtimestamp(timestamp_inicio, tz=br_tz)
+        fim = datetime.fromtimestamp(timestamp_fim, tz=br_tz)
         
         if request.modo_quebra == 'simples':
             return (fim - inicio).total_seconds() / 3600
@@ -5928,445 +6026,45 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
         
         return conversas
     
-    # === FUNÇÕES AUXILIARES (BASEROW FALLBACK) ===
-    
-    def get_table_as_dataframe(table_id, token):
-        """Busca tabela do Baserow como DataFrame"""
-        base_url = "https://baserow-baserow.hqgf38.easypanel.host"
-        headers = {"Authorization": f"Token {token}"}
-        
-        all_records = []
-        page = 1
-        
-        logger.info(f"Buscando dados da tabela {table_id}...")
-        
-        while True:
-            url = f"{base_url}/api/database/rows/table/{table_id}/"
-            params = {
-                "user_field_names": "true",
-                "size": 200,
-                "page": page
-            }
-            
-            try:
-                response = requests.get(url, headers=headers, params=params)
-                response.raise_for_status()
-                
-                data = response.json()
-                results = data.get('results', [])
-                
-                if not results:
-                    break
-                    
-                all_records.extend(results)
-                logger.info(f"Página {page}: +{len(results)} registros")
-                
-                if not data.get('next'):
-                    break
-                    
-                page += 1
-                
-            except requests.exceptions.RequestException as e:
-                logger.error(f"Erro: {e}")
-                break
-        
-        if all_records:
-            df = pd.DataFrame(all_records)
-            logger.info(f"✅ DataFrame criado com {len(df)} linhas e {len(df.columns)} colunas")
-            return df
-        else:
-            logger.info("❌ Nenhum dado encontrado")
-            return pd.DataFrame()
-    
-    def _convert_brazilian_datetime_to_utc_timestamp(
-        start_date: str, 
-        start_time: str, 
-        end_date: str, 
-        end_time: str
-    ) -> tuple:
-        """Converte data/hora brasileira para timestamp UTC em milissegundos"""
-        br_tz = pytz.timezone('America/Sao_Paulo')
-        utc_tz = pytz.UTC
-        
-        # Converte data/hora inicial
-        start_datetime_str = f"{start_date} {start_time}"
-        start_br = datetime.strptime(start_datetime_str, '%d/%m/%Y %H:%M')
-        start_br_localized = br_tz.localize(start_br)
-        start_utc = start_br_localized.astimezone(utc_tz)
-        start_timestamp_ms = int(start_utc.timestamp() * 1000)
-        
-        # Converte data/hora final
-        end_datetime_str = f"{end_date} {end_time}"
-        end_br = datetime.strptime(end_datetime_str, '%d/%m/%Y %H:%M')
-        end_br_localized = br_tz.localize(end_br)
-        end_utc = end_br_localized.astimezone(utc_tz)
-        end_timestamp_ms = int(end_utc.timestamp() * 1000)
-        
-        return start_timestamp_ms, end_timestamp_ms
-    
-    def convert_iso_to_brazilian_format(iso_datetime: str) -> tuple:
-        """Converte formato ISO para brasileiro"""
-        dt = datetime.strptime(iso_datetime, '%Y-%m-%d %H:%M:%S')
-        data_br = dt.strftime('%d/%m/%Y')
-        hora_br = dt.strftime('%H:%M')
-        return data_br, hora_br
-    
-    def new_filter_by_brazilian_datetime_or(
-        df: pd.DataFrame, 
-        start_date: str, 
-        start_time: str, 
-        end_date: str, 
-        end_time: str,
-        timestamp_fields: Union[str, List[str]] = ['messageTimestamp'],
-        verbose: bool = True
-    ) -> pd.DataFrame:
-        """Filtra DataFrame por intervalo de data/hora brasileira"""
-        
-        # Normaliza timestamp_fields para sempre ser uma lista
-        if isinstance(timestamp_fields, str):
-            timestamp_fields = [timestamp_fields]
-        
-        # Valida se os campos existem no DataFrame
-        missing_fields = [field for field in timestamp_fields if field not in df.columns]
-        if missing_fields:
-            raise ValueError(f"Campos não encontrados no DataFrame: {missing_fields}")
-        
-        # Cria cópia do DataFrame
-        df_copy = df.copy()
-        
-        # Converte campos para numérico
-        for field in timestamp_fields:
-            df_copy[field] = pd.to_numeric(df_copy[field], errors='coerce')
-        
-        # Converte datas brasileiras para timestamps UTC
-        try:
-            start_timestamp_ms, end_timestamp_ms = _convert_brazilian_datetime_to_utc_timestamp(
-                start_date, start_time, end_date, end_time
-            )
-        except ValueError as e:
-            raise ValueError(f"Erro na conversão de data/hora: {e}")
-        
-        # Aplica filtro OR para todos os campos especificados
-        conditions = []
-        
-        for field in timestamp_fields:
-            condition = (
-                (df_copy[field].notna()) &
-                (df_copy[field] >= start_timestamp_ms) & 
-                (df_copy[field] <= end_timestamp_ms)
-            )
-            conditions.append(condition)
-        
-        # Combina todas as condições com OR
-        combined_condition = conditions[0]
-        for condition in conditions[1:]:
-            combined_condition = combined_condition | condition
-        
-        # Aplica filtro
-        filtered_df = df_copy[combined_condition]
-        
-        return filtered_df
-    
-    def extract_group_specific_conversation(df_banco, pushname_remetente, numero_conversa):
-        """Extrai conversa específica do banco no formato da API WhatsApp"""
-        
-        # Filtrar mensagens pelo número específico
-        conversas_filtradas = df_banco[
-            df_banco['phoneNumber'] == numero_conversa
-        ].copy()
-        
-        if conversas_filtradas.empty:
-            logger.info(f"⚠️ Nenhuma mensagem encontrada para o número: {numero_conversa}")
-            return []
-        
-        # Ordenar por timestamp
-        conversas_filtradas = conversas_filtradas.sort_values('messageTimestamp')
-        
-        logger.info(f"📊 Encontradas {len(conversas_filtradas)} mensagens para {numero_conversa}")
-        
-        mensagens_formatadas = []
-        
-        for _, row in conversas_filtradas.iterrows():
-            # Determinar se é fromMe
-            from_me = row['pushName'] == pushname_remetente
-            
-            # Converter timestamp UTC milissegundos → fuso brasileiro segundos
-            timestamp_utc_ms = row['messageTimestamp']
-            
-            # Garantir que é número
-            if isinstance(timestamp_utc_ms, str):
-                timestamp_utc_ms = int(float(timestamp_utc_ms))
-            
-            timestamp_utc_s = timestamp_utc_ms / 1000
-            # Converter para fuso brasileiro (UTC-3)
-            timestamp_br = int(timestamp_utc_s - (3 * 3600))
-            
-            # Criar estrutura da API
-            mensagem_api = {
-                'id': row['uuid'],
-                'key': {
-                    'id': row['uuid'][:20].upper().replace('-', ''),
-                    'fromMe': from_me,
-                    'remoteJid': f"{numero_conversa}@s.whatsapp.net"
-                },
-                'pushName': row['pushName'],
-                'messageType': 'conversation',
-                'message': {
-                    'conversation': row['message']
-                },
-                'messageTimestamp': timestamp_br,
-                'instanceId': row.get('instance', ''),
-                'source': 'database'
-            }
-            
-            mensagens_formatadas.append(mensagem_api)
-        
-        logger.info(f"✅ Conversa extraída com sucesso: {len(mensagens_formatadas)} mensagens formatadas")
-        return mensagens_formatadas
-     
-    # === FUNÇÃO PRINCIPAL - TENTAR EVOLUTION ===
-    
-    async def tentar_evolution():
-        """Tenta buscar mensagens da Evolution API"""
-        
-        logger.info("USANDO FUNÇÃO NOVA COM CONVERSOR")
-
-        try:
-            # NOVO: Converter número para formato Evolution automaticamente
-            numero_original = request.numero_telefone
-            
-            def converter_numero_para_evolution(numero_input: str) -> str:
-                """
-                Converte número para formato Evolution API
-                
-                Entrada: 5531984036418 ou 553184036418 ou 31984036418
-                Saída: 553184036418@s.whatsapp.net
-                """
-                # Remove caracteres não numéricos
-                numero_limpo = ''.join(filter(str.isdigit, numero_input))
-                
-                # Se já tem @, retorna como está
-                if '@' in numero_input:
-                    return numero_input
-                
-                # Normalização para números brasileiros
-                if len(numero_limpo) == 13 and numero_limpo.startswith('55'):
-                    # 5531984036418 -> 553184036418 (remove o 9 extra)
-                    numero_final = numero_limpo[:4] + numero_limpo[5:]
-                elif len(numero_limpo) == 12 and numero_limpo.startswith('55'):
-                    # 553184036418 -> mantém como está
-                    numero_final = numero_limpo
-                elif len(numero_limpo) == 11:
-                    # 31984036418 -> 553184036418 (adiciona código do país)
-                    numero_final = '55' + numero_limpo[2:]  # Remove primeiro 9 se for celular
-                elif len(numero_limpo) == 10:
-                    # 3184036418 -> 553184036418 (adiciona código do país + 9)
-                    numero_final = '55' + numero_limpo
-                else:
-                    # Fallback: usa como está
-                    numero_final = numero_limpo
-                
-                # Adiciona o sufixo do WhatsApp
-                return f"{numero_final}@s.whatsapp.net"
-            
-            # Converter numero para formato Evolution
-            numero_evolution = converter_numero_para_evolution(numero_original)
-            
-            logger.info(f"Número original: {numero_original}")
-            logger.info(f"Número Evolution: {numero_evolution}")
-            logger.info(f"🚀 Tentando Evolution para {numero_evolution}")
-            
-            # Buscar mensagens
-            headers = {
-                'Content-Type': 'application/json',
-                'apikey': evolution_api_key
-            }
-            
-            url = f"{evolution_url.rstrip('/')}/chat/findMessages/{evolution_instance_name}"
-            todas_mensagens = []
-            pagina_atual = 1
-                        
-            async with aiohttp.ClientSession() as session:
-                while True:
-                    logger.info(f"🔍 Buscando página {pagina_atual}")
-                    
-                    payload = {
-                        "where": {
-                            "key": {
-                                "remoteJid": numero_evolution
-                            }
-                        },
-                        "page": pagina_atual,
-                        "offset": (pagina_atual - 1) * request.limite_por_pagina,
-                        "limit": request.limite_por_pagina
-                    }
-                    
-                    async with session.post(url, headers=headers, json=payload, timeout=request.timeout) as response:
-                        response.raise_for_status()
-                        resultado = await response.json()
-                        
-                        if isinstance(resultado, dict) and resultado.get('error'):
-                            logger.error(f"❌ Erro da API: {resultado.get('message')}")
-                            return None
-                        
-                        mensagens_pagina = []
-                        
-                        if isinstance(resultado, dict) and 'messages' in resultado:
-                            info_mensagens = resultado['messages']
-                            mensagens_pagina = info_mensagens.get('records', [])
-                            total_paginas = info_mensagens.get('pages', 1)
-                            
-                            if pagina_atual == 1:
-                                total_mensagens = info_mensagens.get('total', 0)
-                                logger.info(f"📊 Total: {total_mensagens} mensagens")
-                                logger.info(f"📄 Total páginas disponíveis: {total_paginas}")
-                        
-                        elif isinstance(resultado, list):
-                            mensagens_pagina = resultado
-                        
-                        logger.info(f"📋 Página {pagina_atual}: {len(mensagens_pagina)} mensagens")
-                        
-                        # Para o loop se não há mais mensagens
-                        if not mensagens_pagina:
-                            logger.info("🛑 Parando: não há mais mensagens")
-                            break
-                        
-                        todas_mensagens.extend(mensagens_pagina)
-                        
-                        pagina_atual += 1
-                        
-                        # Proteção contra loop infinito
-                        if pagina_atual > 500:
-                            logger.warning("Atingiu limite de 500 páginas por segurança")
-                            break
-
-            total_raw = len(todas_mensagens)
-            
-            # Filtrar por período
-            mensagens_filtradas = filtrar_mensagens_por_periodo(todas_mensagens)
-            total_filtradas = len(mensagens_filtradas)
-            
-            logger.info(f"✅ Evolution: {total_raw} raw, {total_filtradas} filtradas")
-            
-            # Retornar resultado
-            return {
-                'sucesso': True,
-                'total_mensagens_raw': total_raw,
-                'total_mensagens_filtradas': total_filtradas,
-                'mensagens': mensagens_filtradas,
-                'numero_original': numero_original,
-                'numero_evolution_usado': numero_evolution  # Para debug
-            }
-            
-        except Exception as e:
-            logger.warning(f"⚠️ Evolution falhou: {str(e)}")
-            return None
-
-    # === FUNÇÃO FALLBACK - BASEROW ===
-    
-    def tentar_baserow():
-        """Fallback: buscar mensagens do Baserow"""
-        try:
-            logger.info(f"🔄 Tentando fallback Baserow para {request.numero_telefone}")
-            
-            # Buscar tabela de conversas
-            df_conversas = get_table_as_dataframe(message_table_id, baserow_token)
-            
-            if df_conversas.empty:
-                logger.warning("❌ Tabela de conversas vazia")
-                return None
-            
-            # Se tem filtro de período, aplicar
-            if request.data_hora_inicio and request.data_hora_fim:
-                data_inicio, hora_inicio = convert_iso_to_brazilian_format(request.data_hora_inicio)
-                data_fim, hora_fim = convert_iso_to_brazilian_format(request.data_hora_fim)
-                
-                df_conversas = new_filter_by_brazilian_datetime_or(
-                    df_conversas, 
-                    data_inicio, 
-                    hora_inicio, 
-                    data_fim, 
-                    hora_fim, 
-                    ['messageTimestamp']
-                )
-            
-            # Extrair conversa específica
-            mensagens_formatadas = extract_group_specific_conversation(
-                df_conversas, 
-                agent_name, 
-                request.numero_telefone
-            )
-            
-            if not mensagens_formatadas:
-                logger.warning(f"❌ Baserow: nenhuma mensagem para {request.numero_telefone}")
-                return None
-            
-            logger.info(f"✅ Baserow: {len(mensagens_formatadas)} mensagens encontradas")
-            
-            return {
-                'sucesso': True,
-                'total_mensagens_raw': len(mensagens_formatadas),
-                'total_mensagens_filtradas': len(mensagens_formatadas),
-                'mensagens': mensagens_formatadas
-            }
-            
-        except Exception as e:
-            logger.error(f"❌ Baserow falhou: {str(e)}")
-            return None
-    
     # === EXECUÇÃO PRINCIPAL ===
     
     try:
-        logger.info(f"🎯 V2: Processando conversa para {request.numero_telefone}")
+        logger.info(f"Buscando mensagens para: {request.numero_telefone}")
         
-        if request.forcar_evolution_apenas:
-            logger.info("🚀 Modo Evolution APENAS ativado - sem fallback")
+        # Usar função interna
+        mensagens_para_processar = find_messages_with_correct_format(
+            base_url=evolution_url.rstrip('/'),
+            api_key=evolution_api_key,
+            instance_name=evolution_instance_name,
+            phone_number=request.numero_telefone,
+            limit=request.limite_por_pagina,
+            max_pages=request.max_paginas
+        )
         
-        # TENTATIVA 1: EVOLUTION
-        resultado_evolution = await tentar_evolution()
-        
-        # Verificar se Evolution funcionou e tem mensagens
-        if resultado_evolution and resultado_evolution['total_mensagens_filtradas'] > 0:
-            logger.info("✅ Evolution: sucesso, processando mensagens...")
-            mensagens_para_processar = resultado_evolution['mensagens']
-            fonte = "evolution"
-        elif request.forcar_evolution_apenas:
-            # SE FORÇOU EVOLUTION APENAS E NÃO ENCONTROU, RETORNA ERRO/VAZIO
-            logger.warning("❌ Evolution forçado não encontrou mensagens")
+        if not mensagens_para_processar:
+            logger.warning(f"Nenhuma mensagem encontrada para {request.numero_telefone}")
             return {
                 'numero': request.numero_telefone,
                 'sucesso': True,
                 'total_mensagens_raw': 0,
                 'total_mensagens_filtradas': 0,
                 'conversa_processada': None,
-                'fonte_dados': 'evolution_forcado',
-                'erro': 'Nenhuma mensagem encontrada na Evolution (modo forçado)'
+                'fonte_dados': 'evolution',
+                'erro': 'Nenhuma mensagem encontrada'
             }
-        else:
-            logger.info("🔄 Evolution falhou/0 mensagens, tentando Baserow...")
-            
-            # TENTATIVA 2: BASEROW (APENAS SE NÃO FORÇOU EVOLUTION)
-            resultado_baserow = tentar_baserow()
-            
-            if resultado_baserow and resultado_baserow['total_mensagens_filtradas'] > 0:
-                logger.info("✅ Baserow: sucesso, processando mensagens...")
-                mensagens_para_processar = resultado_baserow['mensagens']
-                fonte = "baserow"
-            else:
-                logger.warning("❌ Ambas as fontes falharam")
-                return {
-                    'numero': request.numero_telefone,
-                    'sucesso': True,
-                    'total_mensagens_raw': 0,
-                    'total_mensagens_filtradas': 0,
-                    'conversa_processada': None,
-                    'fonte_dados': 'nenhuma',
-                    'erro': 'Nenhuma mensagem encontrada em Evolution nem Baserow'
-                }
         
-        # PROCESSAR MENSAGENS (mesmo código do V1)
-        mensagens_ordenadas = sorted(mensagens_para_processar, key=lambda x: x.get('messageTimestamp', 0))
+        logger.info(f"Evolution: {len(mensagens_para_processar)} mensagens encontradas")
+        
+        # Filtrar por período se necessário
+        mensagens_filtradas = filtrar_mensagens_por_periodo(mensagens_para_processar)
+        logger.info(f"Após filtro de período: {len(mensagens_filtradas)} mensagens")
+        
+        # PROCESSAR MENSAGENS - CORRIGINDO CONVERSÃO DE TIMESTAMP
+        mensagens_ordenadas = sorted(mensagens_filtradas, key=lambda x: x.get('messageTimestamp', 0))
         mensagens_estruturadas = []
+        
+        # Definir timezone brasileiro
+        br_tz = pytz.timezone('America/Sao_Paulo')
         
         for msg in mensagens_ordenadas:
             timestamp = msg.get('messageTimestamp', 0)
@@ -6386,7 +6084,8 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
             conteudo = extrair_conteudo_mensagem(msg, remetente)
             
             try:
-                data_hora = datetime.fromtimestamp(timestamp).strftime('%d/%m/%Y %H:%M:%S')
+                # CORREÇÃO: Converter timestamp UTC para horário brasileiro
+                data_hora = datetime.fromtimestamp(timestamp, tz=br_tz).strftime('%d/%m/%Y %H:%M:%S')
             except (ValueError, OSError):
                 data_hora = "Data inválida"
             
@@ -6401,7 +6100,7 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
                 'message_id': msg.get('key', {}).get('id', '')
             })
         
-        # GERAR RESULTADO (mesmo código do V1)
+        # GERAR RESULTADO
         if not request.quebrar_conversas:
             # CONVERSA ÚNICA
             conversa_texto = f"=== CONVERSA COM NÚMERO: {request.numero_telefone} ===\n\n"
@@ -6437,7 +6136,7 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
                 'total_mensagens_raw': len(mensagens_para_processar),
                 'total_mensagens_filtradas': len(mensagens_estruturadas),
                 'conversa_processada': conversa_processada,
-                'fonte_dados': fonte,  # 'evolution' ou 'baserow'
+                'fonte_dados': 'evolution',
                 'erro': None
             }
         
@@ -6491,13 +6190,13 @@ async def endpoint_buscar_conversas_numero_com_fallback(request: WhatsAppRequest
                 'total_mensagens_filtradas': len(mensagens_estruturadas),
                 'total_conversas': len(lista_conversas),
                 'conversas': lista_conversas,
-                'fonte_dados': fonte,  # 'evolution' ou 'baserow'
+                'fonte_dados': 'evolution',
                 'erro': None
             }
     
     except Exception as e:
-        error_msg = f"Erro no processamento V2: {str(e)}"
-        logger.error(f"❌ {error_msg}")
+        error_msg = f"Erro no processamento: {str(e)}"
+        logger.error(f"Erro: {error_msg}")
         
         return {
             'numero': request.numero_telefone,
@@ -7368,6 +7067,7 @@ app.include_router(
     prefix="/context", 
     tags=["context"]
 )
+
 
 
 
