@@ -2058,97 +2058,97 @@ Conte sempre conosco! 💛"""
         # Mensagens com nome personalizado (usando f-string)
         mensagens_com_nome = [
             f"""Buenas {nome_contexto}, tudo bem? 
-    Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
+Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
 
-    Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
+Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
 
-    Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
+Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
 
-    Hoje você trabalha com o que?""",
+Hoje você trabalha com o que?""",
 
             f"""Buenas {nome_contexto}, como vai? 
-    Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
+Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
 
-    Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
+Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
 
-    Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
+Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
 
-    Me conta, qual é a sua área de atuação hoje?""",
+Me conta, qual é a sua área de atuação hoje?""",
 
             f"""Buenas {nome_contexto}, beleza? 
-    Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
+Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
 
-    Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
+Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
 
-    Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
+Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
 
-    O que você faz profissionalmente no momento?""",
+O que você faz profissionalmente no momento?""",
 
             f"""Buenas {nome_contexto}, tudo joia? 
-    Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
+Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
 
-    Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
+Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
 
-    Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
+Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
 
-    Atualmente você trabalha em que área?""",
+Atualmente você trabalha em que área?""",
 
             f"""Buenas {nome_contexto}, como você está? 
-    Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
+Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
 
-    Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
+Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
 
-    Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
+Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
 
-    Hoje você trabalha com o que exatamente?"""
+Hoje você trabalha com o que exatamente?"""
         ]
         
         # Mensagens sem nome (genéricas)
         mensagens_sem_nome = [
             """Buenas, tudo bem? 
-    Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
+Aqui é a Fabricia, mentora lá dos grupos Masterclass em Vendas. Fico feliz com sua participação!
 
-    Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
+Não sei se você sabe, mas trabalho na área de vendas há anos e hoje cuido de algumas empresas com estratégias em crescimento de negócios e profissionais da área da saúde.
 
-    Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
+Estou tirando um tempinho para conhecer mais sobre vocês também, quero preparar conteúdos que realmente façam sentido para vocês!
 
-    Hoje você trabalha com o que?""",
+Hoje você trabalha com o que?""",
 
             """Buenas, como vai? 
-    Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
+Sou a Fabricia, mentora aqui do grupo Masterclass em Vendas. Que bom ter você conosco!
 
-    Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
+Talvez você não saiba, mas já estou na área de vendas faz um tempão e atualmente ajudo várias empresas e profissionais da saúde a crescerem seus negócios.
 
-    Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
+Estou aqui conversando com vocês para entender melhor o perfil de cada um, assim posso criar materiais que realmente agreguem valor na vida de vocês!
 
-    Me conta, qual é a sua área de atuação hoje?""",
+Me conta, qual é a sua área de atuação hoje?""",
 
             """Buenas, beleza? 
-    Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
+Fabricia aqui, sua mentora do Masterclass em Vendas. Adorei te ver participando!
 
-    Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
+Não sei se você já me conhece, mas trabalho com vendas há muitos anos e hoje foco em ajudar empresas e profissionais de saúde a estruturarem suas estratégias comerciais.
 
-    Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
+Quero bater um papo com vocês para conhecer melhor quem está aqui, assim consigo desenvolver conteúdos que façam diferença real na prática de cada um!
 
-    O que você faz profissionalmente no momento?""",
+O que você faz profissionalmente no momento?""",
 
             """Buenas, tudo joia? 
-    Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
+Fabricia falando! Sou mentora do grupo Masterclass em Vendas e estou muito feliz de ver você aqui!
 
-    Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
+Caso não me conheça ainda, tenho uma longa trajetória em vendas e hoje dedico meu tempo a orientar negócios e profissionais da área da saúde no crescimento de suas vendas.
 
-    Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
+Estou dando uma passadinha para conhecer vocês melhor, porque quero criar conteúdos que realmente batam com as necessidades de cada um aqui do grupo!
 
-    Atualmente você trabalha em que área?""",
+Atualmente você trabalha em que área?""",
 
             """Buenas, como você está? 
-    Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
+Sou a Fabricia, mentora aqui dos grupos Masterclass em Vendas. Que alegria ter você participando!
 
-    Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
+Pode ser que você não me conheça ainda, mas venho da área de vendas há bastante tempo e hoje me dedico a apoiar empresas e profissionais da saúde com estratégias para alavancar seus resultados.
 
-    Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
+Estou passando para conversar com vocês e entender melhor quem são, assim posso preparar conteúdos que realmente agreguem e façam diferença no dia a dia de cada um!
 
-    Hoje você trabalha com o que exatamente?"""
+Hoje você trabalha com o que exatamente?"""
         ]
         
         # Escolher mensagem baseada na presença do nome
